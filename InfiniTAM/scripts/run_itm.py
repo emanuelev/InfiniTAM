@@ -46,6 +46,17 @@ algorithm = InfiniTAM(BIN_PATH)
 algorithm.ate_associate_identity = False
 algorithm.ate_remove_offset = False
 algorithm.ate_align = True
-res = algorithm.run(TUM_RGB_FR3_DESK)
-print res
+
+run_results = {}
+# for mu in [0.1, 0.05]:
+run_counter = 0
+for sequence in [TUM_RGB_FR2_DESK, TUM_RGB_FR3_DESK]:
+    kernel_data = []
+    res = algorithm.run(sequence)
+    res['sequence'] = sequence.descr
+    res['noise_factor'] = 0.1
+    run_results[run_counter] = res
+    run_counter += 1
+    kernel_data.append(res)
+print run_results 
 
