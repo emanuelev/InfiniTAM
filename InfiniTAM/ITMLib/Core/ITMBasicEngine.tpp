@@ -337,7 +337,11 @@ ITMTrackingState::TrackingResult ITMBasicEngine<TVoxel,TIndex>::ProcessFrame(ITM
 	QuaternionFromRotationMatrix(R, q);
 	fprintf(stderr, "%f %f %f %f %f %f %f\n", t[0], t[1], t[2], q[1], q[2], q[3], q[0]);
 #endif
-    
+  static int frame = 0;
+	const ORUtils::SE3Pose *p = trackingState->pose_d;
+	double t[3];
+	for (int i = 0; i < 3; ++i) t[i] = p->GetInvM().m[3 * 4 + i];
+  fprintf(stderr, "%d %f %f %f\n", frame, t[0], t[1], t[2]);
     return trackerResult;
 }
 
