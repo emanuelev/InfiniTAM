@@ -221,6 +221,7 @@ static void GenericRaycast(const ITMScene<TVoxel, TIndex> *scene, const Vector2i
 				mu,
 				minmaximg[locId2]
 			);
+    // sdkStopTimer(&ray_average);
 	}
 }
 
@@ -349,11 +350,21 @@ static void CreateICPMaps_common(const ITMScene<TVoxel,TIndex> *scene, const ITM
 {
 	Vector2i imgSize = renderState->raycastResult->noDims;
 	Matrix4f invM = trackingState->pose_d->GetInvM();
+  static bool init_timers = false;
+  if(!init_timers) {
+      sdkCreateTimer(&ray_average);
+      sdkCreateTimer(&ray_instant);
+      init_timers = true;
+  }
 
 	// this one is generally done for the ICP tracker, so yes, update
 	// the list of visible blocks if possible
+  // std::cout << "Raycasting at resolution: " <<  imgSize.x << " " <<  imgSize.y << std::endl;
+  sdkStartTimer(&ray_average);
 	GenericRaycast(scene, imgSize, invM, view->calib.intrinsics_d.projectionParamsSimple.all, renderState, true);
 	trackingState->pose_pointCloud->SetFrom(trackingState->pose_d);
+  sdkStopTimer(&ray_average);
+  std::cout << "Average raycast: " << sdkGetAverageTimerValue(&ray_average) << std::endl;
 
 	Vector3f lightSource = -Vector3f(invM.getColumn(2));
 	Vector4f *normalsMap = trackingState->pointCloud->colours->GetData(MEMORYDEVICE_CPU);

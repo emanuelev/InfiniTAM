@@ -54,7 +54,7 @@ for sequence in [TUM_RGB_FR2_DESK, TUM_RGB_FR3_DESK]:
     kernel_data = []
     res = algorithm.run(sequence)
     res['sequence'] = sequence.descr
-    res['noise_factor'] = 0.1
+    res['noise_factor'] = 0.075
     run_results[run_counter] = res
     run_counter += 1
     kernel_data.append(res)

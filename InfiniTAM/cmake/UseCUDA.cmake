@@ -4,7 +4,7 @@
 
 FIND_PACKAGE(CUDA QUIET)
 
-OPTION(WITH_CUDA "Build with CUDA support?" ${CUDA_FOUND})
+OPTION(WITH_CUDA "Build with CUDA support?" OFF)
 
 IF(WITH_CUDA)
   # Auto-detect the CUDA compute capability.

@@ -16,6 +16,12 @@
 
 using namespace ITMLib;
 
+static StopWatchInterface *integrate_instant;
+static StopWatchInterface *integrate_average;
+
+static StopWatchInterface *raycast_instant;
+static StopWatchInterface *raycast_average;
+
 template <typename TVoxel, typename TIndex>
 ITMBasicEngine<TVoxel,TIndex>::ITMBasicEngine(const ITMLibSettings *settings, const ITMRGBDCalib& calib, Vector2i imgSize_rgb, Vector2i imgSize_d)
 {

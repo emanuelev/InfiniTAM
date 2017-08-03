@@ -3,9 +3,13 @@
 #pragma once
 
 #include "../Interface/ITMVisualisationEngine.h"
+#include "../../../../ORUtils/NVTimer.h"
 
 namespace ITMLib
 {
+  static StopWatchInterface *ray_instant;
+  static StopWatchInterface *ray_average;
+
 	template<class TVoxel, class TIndex>
 	class ITMVisualisationEngine_CPU : public ITMVisualisationEngine < TVoxel, TIndex >
 	{
