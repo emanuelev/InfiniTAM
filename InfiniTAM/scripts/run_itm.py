@@ -30,10 +30,10 @@ class InfiniTAM(SLAMAlgorithm):
         #self.ate_associate_identity = dataset.ate_associate_identity
 
     def _generate_run_command(self, camera_calib_path, dataset_path, results_path):
-        rgb = dataset_path + 'rgb_ppm/%04i.ppm'
-        depth = dataset_path + 'depth_pgm/%04i.pgm'
+        rgb = dataset_path + 'rgb_qvga_ppm/%04i.ppm'
+        depth = dataset_path + 'depth_qvga_pgm/%04i.pgm'
         call(["touch", results_path])
-        arguments = '{} {} {} 2> {}'.format(str(camera_calib_path), rgb, depth, results_path) 
+        arguments = '{} {} {} 2> {}'.format(str(dataset_path + "calib_half.txt"), rgb, depth, results_path) 
         return self.bin_path + 'Apps/InfiniTAM_cli/InfiniTAM_cli ' + arguments
 
     def _store_variables(self, res):

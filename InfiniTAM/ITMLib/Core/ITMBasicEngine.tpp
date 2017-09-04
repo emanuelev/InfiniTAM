@@ -16,6 +16,9 @@
 
 using namespace ITMLib;
 
+static StopWatchInterface *tracking_instant;
+static StopWatchInterface *tracking_average;
+
 static StopWatchInterface *integrate_instant;
 static StopWatchInterface *integrate_average;
 
@@ -71,6 +74,13 @@ ITMBasicEngine<TVoxel,TIndex>::ITMBasicEngine(const ITMLibSettings *settings, co
 	trackingInitialised = false;
 	relocalisationCount = 0;
 	framesProcessed = 0;
+
+  sdkCreateTimer(&tracking_instant);
+  sdkCreateTimer(&tracking_average);
+  sdkCreateTimer(&integrate_instant);
+  sdkCreateTimer(&integrate_average);
+  sdkCreateTimer(&raycast_average);
+  sdkCreateTimer(&raycast_instant);
 }
 
 template <typename TVoxel, typename TIndex>
@@ -257,8 +267,11 @@ ITMTrackingState::TrackingResult ITMBasicEngine<TVoxel,TIndex>::ProcessFrame(ITM
 	if (!mainProcessingActive) return ITMTrackingState::TRACKING_FAILED;
 
 	// tracking
+  sdkResetTimer(&tracking_instant);
+  sdkStartTimer(&tracking_instant); sdkStartTimer(&tracking_average);
 	ORUtils::SE3Pose oldPose(*(trackingState->pose_d));
 	if (trackingActive) trackingController->Track(trackingState, view);
+  sdkStopTimer(&tracking_instant); sdkStopTimer(&tracking_average);
 
 	ITMTrackingState::TrackingResult trackerResult = ITMTrackingState::TRACKING_GOOD;
 	switch (settings->behaviourOnFailure) {
@@ -308,7 +321,10 @@ ITMTrackingState::TrackingResult ITMBasicEngine<TVoxel,TIndex>::ProcessFrame(ITM
 	bool didFusion = false;
 	if ((trackerResult == ITMTrackingState::TRACKING_GOOD || !trackingInitialised) && (fusionActive) && (relocalisationCount == 0)) {
 		// fusion
+    sdkResetTimer(&integrate_instant);
+    sdkStartTimer(&integrate_instant); sdkStartTimer(&integrate_average);
 		denseMapper->ProcessFrame(view, trackingState, scene, renderState_live);
+    sdkStopTimer(&integrate_instant); sdkStopTimer(&integrate_average);
 		didFusion = true;
 		if (framesProcessed > 50) trackingInitialised = true;
 
@@ -320,7 +336,10 @@ ITMTrackingState::TrackingResult ITMBasicEngine<TVoxel,TIndex>::ProcessFrame(ITM
 		if (!didFusion) denseMapper->UpdateVisibleList(view, trackingState, scene, renderState_live);
 
 		// raycast to renderState_live for tracking and free visualisation
+    sdkResetTimer(&raycast_instant);
+    sdkStartTimer(&raycast_instant); sdkStartTimer(&raycast_average);
 		trackingController->Prepare(trackingState, scene, view, visualisationEngine, renderState_live);
+    sdkStopTimer(&raycast_instant); sdkStopTimer(&raycast_average);
 
 		if (addKeyframeIdx >= 0)
 		{
@@ -347,7 +366,10 @@ ITMTrackingState::TrackingResult ITMBasicEngine<TVoxel,TIndex>::ProcessFrame(ITM
 	const ORUtils::SE3Pose *p = trackingState->pose_d;
 	double t[3];
 	for (int i = 0; i < 3; ++i) t[i] = p->GetInvM().m[3 * 4 + i];
-  fprintf(stderr, "%d %f %f %f\n", frame, t[0], t[1], t[2]);
+	fprintf(stderr, "%i %f %f %f ", frame++, t[0], t[1], t[2]);
+	fprintf(stderr, "tracking time %.2f, avg %.2f ", sdkGetTimerValue(&tracking_instant), sdkGetAverageTimerValue(&tracking_average));
+	fprintf(stderr, "integrate time %.2f, avg %.2f ", sdkGetTimerValue(&integrate_instant), sdkGetAverageTimerValue(&integrate_average));
+	fprintf(stderr, "raycast ttime %.2f, avg %.2f\n", sdkGetTimerValue(&raycast_instant), sdkGetAverageTimerValue(&raycast_average));
     return trackerResult;
 }
 

@@ -364,7 +364,7 @@ static void CreateICPMaps_common(const ITMScene<TVoxel,TIndex> *scene, const ITM
 	GenericRaycast(scene, imgSize, invM, view->calib.intrinsics_d.projectionParamsSimple.all, renderState, true);
 	trackingState->pose_pointCloud->SetFrom(trackingState->pose_d);
   sdkStopTimer(&ray_average);
-  std::cout << "Average raycast: " << sdkGetAverageTimerValue(&ray_average) << std::endl;
+  // std::cout << "Average raycast: " << sdkGetAverageTimerValue(&ray_average) << std::endl;
 
 	Vector3f lightSource = -Vector3f(invM.getColumn(2));
 	Vector4f *normalsMap = trackingState->pointCloud->colours->GetData(MEMORYDEVICE_CPU);
