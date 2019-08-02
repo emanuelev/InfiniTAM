@@ -2,7 +2,7 @@
 # UseOpenNI.cmake #
 ###################
 
-OPTION(WITH_OPENNI "Build with OpenNI support?" ON)
+OPTION(WITH_OPENNI "Build with OpenNI support?" OFF)
 
 IF(WITH_OPENNI)
   IF(MSVC_IDE)

@@ -367,9 +367,9 @@ ITMTrackingState::TrackingResult ITMBasicEngine<TVoxel,TIndex>::ProcessFrame(ITM
 	double t[3];
 	for (int i = 0; i < 3; ++i) t[i] = p->GetInvM().m[3 * 4 + i];
 	fprintf(stderr, "%i %f %f %f ", frame++, t[0], t[1], t[2]);
-	fprintf(stderr, "tracking time %.2f, avg %.2f ", sdkGetTimerValue(&tracking_instant), sdkGetAverageTimerValue(&tracking_average));
-	fprintf(stderr, "integrate time %.2f, avg %.2f ", sdkGetTimerValue(&integrate_instant), sdkGetAverageTimerValue(&integrate_average));
-	fprintf(stderr, "raycast ttime %.2f, avg %.2f\n", sdkGetTimerValue(&raycast_instant), sdkGetAverageTimerValue(&raycast_average));
+	fprintf(stderr, "%.2f, ", sdkGetAverageTimerValue(&integrate_average));
+	fprintf(stderr, "%.2f, ", sdkGetAverageTimerValue(&raycast_average));
+	fprintf(stderr, "%.2f\n", sdkGetAverageTimerValue(&integrate_average) + sdkGetAverageTimerValue(&raycast_average) + sdkGetAverageTimerValue(&tracking_average));
     return trackerResult;
 }
 

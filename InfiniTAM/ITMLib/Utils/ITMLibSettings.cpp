@@ -7,7 +7,7 @@ using namespace ITMLib;
 #include <cmath>
 
 ITMLibSettings::ITMLibSettings(void)
-:	sceneParams(0.1f, 100, 0.01f, 0.4f, 4.0f, false),
+:	sceneParams(0.05f, 100, 0.0025f, 0.1f, 4.0f, false),
 	surfelSceneParams(0.5f, 0.6f, static_cast<float>(20 * M_PI / 180), 0.01f, 0.004f, 3.5f, 25.0f, 4, 1.0f, 5.0f, 20, 10000000, true, true)
 {
 	// skips every other point when using the colour renderer for creating a point cloud
@@ -15,7 +15,7 @@ ITMLibSettings::ITMLibSettings(void)
 
 	// create all the things required for marching cubes and mesh extraction
 	// - uses additional memory (lots!)
-	createMeshingEngine = true;
+	createMeshingEngine = false;
 
 #ifndef COMPILE_WITHOUT_CUDA
 	deviceType = DEVICE_CUDA;

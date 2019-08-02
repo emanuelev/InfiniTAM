@@ -5,6 +5,11 @@ from datasets import *
 import numpy as np 
 from subprocess import call
 
+TUM_RGB_FR1 = [TUM_RGB_FR1_XYZ, TUM_RGB_FR1_DESK]
+TUM_RGB_FR2 = [TUM_RGB_FR2_DESK]
+TUM_RGB_FR3 = [TUM_RGB_FR3_DESK]
+ICL = [ICL_NUIM_LIV_0, ICL_NUIM_LIV_1, ICL_NUIM_LIV_2, ICL_NUIM_LIV_3]
+
 class InfiniTAM(SLAMAlgorithm):
 
     def __init__(self, bin_path):
@@ -50,6 +55,8 @@ algorithm.ate_align = True
 run_results = {}
 # for mu in [0.1, 0.05]:
 run_counter = 0
+#for sequence in ICL + TUM_RGB_FR1 + TUM_RGB_FR2 + TUM_RGB_FR3:
+#for sequence in ICL:
 for sequence in [TUM_RGB_FR2_DESK, TUM_RGB_FR3_DESK]:
     kernel_data = []
     res = algorithm.run(sequence)
